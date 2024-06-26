@@ -1,0 +1,38 @@
+<script>
+    // Function to get URL parameter
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    // Function to send AJAX request
+    function sendCjeventToServer(cjevent) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://soodletech.com/airestech-cj-cookie/index.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log("Cookie set successfully");
+                } else {
+                    console.error("Failed to set cookie", xhr.statusText);
+                }
+            }
+        };
+        xhr.send("cjevent=" + cjevent);
+    }
+
+    // Check if cjevent parameter exists
+    window.onload = function() {
+        var cjevent = getParameterByName('cjevent');
+        if (cjevent) {
+            // Send cjevent to the server
+            sendCjeventToServer(cjevent);
+        }
+    };
+</script>
